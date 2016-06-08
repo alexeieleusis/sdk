@@ -378,6 +378,25 @@ abstract class InterfaceType implements ParameterizedType {
   InterfaceType get superclass;
 
   /**
+   * Return a list containing all the interfaces this type implements, including
+   * those implemented transitively through other interfaces.
+   */
+  List<InterfaceType> findImplementedInterfaces() =>
+      _findImplementedInterfaces();
+
+  /**
+   * Utility method to hide the accumulator from clients.
+   */
+  List<InterfaceType> _findImplementedInterfaces(
+      {List<InterfaceType> acc: const []}) =>
+      acc.contains(this)
+          ? acc
+          : interfaces.fold(
+          <InterfaceType>[this],
+          (List<InterfaceType> acc, InterfaceType e) => new List.from(acc)
+        ..addAll(e._findImplementedInterfaces(acc: acc)));
+
+  /**
    * Return the element representing the getter with the given [name] that is
    * declared in this class, or `null` if this class does not declare a getter
    * with the given name.
